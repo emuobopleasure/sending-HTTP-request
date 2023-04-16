@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import MoviesList from './components/MoviesList';
 import './App.css';
@@ -8,7 +8,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const fetchMoviesHandler = async () => {
+  //used useCallback to ensure the fetchMoviesHandler is not recreated unnecessarily since it is a dependency in useEffect
+  const fetchMoviesHandler = useCallback( async () => {
     setIsLoading(true)
     setError(null)
     try {
@@ -36,7 +37,11 @@ function App() {
     setIsLoading(false)
 
     // console.log(movies)
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchMoviesHandler()
+  }, [fetchMoviesHandler])
 
   let content = <p>Found no movies</p>
 
